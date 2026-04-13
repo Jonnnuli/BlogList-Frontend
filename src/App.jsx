@@ -10,6 +10,7 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
+  const [infoMessage, setInfoMessage] = useState(null)
   const [newBlog, setNewBlog] = useState('')
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
@@ -71,6 +72,9 @@ const App = () => {
       const blog = await blogService.create(blogObject)
       setBlogs(blogs.concat(blog))
 
+      setInfoMessage(`A new blog ${newTitle} by ${newAuthor} added.`)
+      setTimeout(() => { setInfoMessage(null) }, 5000)
+
       setNewTitle('')
       setNewAuthor('')
       setNewUrl('')
@@ -127,7 +131,8 @@ const App = () => {
   return (
       <div>
         <h2>Blogs</h2>
-        <Notification message={errorMessage}/>
+        <Notification message={errorMessage} type="error"/>
+        <Notification message={infoMessage} type="success"/>
         {!user && loginForm()}
         {user && (
             <div>
