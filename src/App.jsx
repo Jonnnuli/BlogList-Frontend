@@ -11,6 +11,9 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
   const [newBlog, setNewBlog] = useState('')
+  const [newTitle, setNewTitle] = useState('')
+  const [newAuthor, setNewAuthor] = useState('')
+  const [newUrl, setNewUrl] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -57,11 +60,24 @@ const App = () => {
     setNewBlog(event.target.value)
   }
 
-  const addBlog = (event) => {
+  const addBlog = async event => {
     event.preventDefault()
-    //const blogObject = {
-    //}
-    console.log('new blog:', newBlog)
+    const blogObject = {
+      title: newTitle,
+      author: newAuthor,
+      url: newUrl,
+    }
+    try {
+      const blog = await blogService.create(blogObject)
+      setBlogs(blogs.concat(blog))
+
+      setNewTitle('')
+      setNewAuthor('')
+      setNewUrl('')
+    } catch {
+      setErrorMessage('error creating blog')
+      setTimeout(() => setErrorMessage(null), 5000)
+    }
   }
 
   const loginForm = () => (
@@ -92,25 +108,36 @@ const App = () => {
 
   const blogForm = () => (
       <form onSubmit={addBlog}>
-        <input value={newBlog} onChange={handleBlogChange} />
+        <div>
+          title
+          <input value={newTitle} onChange={({target}) => setNewTitle(target.value)}/>
+        </div>
+        <div>
+          author
+          <input value={newAuthor} onChange={({target}) => setNewAuthor(target.value)}/>
+        </div>
+        <div>
+          url
+          <input value={newUrl} onChange={({target}) => setNewUrl(target.value)}/>
+        </div>
         <button type="submit">save</button>
       </form>
   )
 
   return (
-    <div>
-    <h2>Blogs</h2>
-      <Notification message={errorMessage} />
-      {!user && loginForm()}
-      {user && (
-          <div>
-            <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
-            {blogForm()}
-          </div>
-      )}
+      <div>
+        <h2>Blogs</h2>
+        <Notification message={errorMessage}/>
+        {!user && loginForm()}
+        {user && (
+            <div>
+              <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
+              {blogForm()}
+            </div>
+        )}
 
-    {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        {blogs.map(blog =>
+            <Blog key={blog.id} blog={blog} />
       )}
     </div>
   )
