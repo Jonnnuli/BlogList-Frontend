@@ -82,8 +82,10 @@ const App = () => {
 
     const returnedBlog = await blogService.update(blog.id, updatedBlog)
 
+    const blogUser = {...returnedBlog, user: blog.user}
+
     setBlogs(blogs.map(b =>
-        b.id === blog.id ? returnedBlog : b
+        b.id === blog.id ? blogUser : b
     ))
   }
 
