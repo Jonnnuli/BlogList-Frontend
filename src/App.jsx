@@ -84,9 +84,11 @@ const App = () => {
 
     const blogUser = {...returnedBlog, user: blog.user}
 
-    setBlogs(blogs.map(b =>
-        b.id === blog.id ? blogUser : b
-    ))
+    setBlogs(blogs =>
+        blogs
+            .map(b => b.id === blog.id ? blogUser : b)
+            .sort((a, b) => a.likes - b.likes)
+    )
   }
 
   const loginForm = () => (
