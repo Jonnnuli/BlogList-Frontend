@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
 
 test('renders content', () => {
@@ -6,11 +7,36 @@ test('renders content', () => {
     title: 'Component testing is done with react-testing-library',
     author: 'Author',
     url: 'www.example.com',
-    likes: 1
+    likes: 1,
+    user: {
+      name: 'TestiJonna'
+    }
   }
 
   render(<Blog blog={blog} />)
 
   const element = screen.getByText('Component testing is done with react-testing-library')
   expect(element).toBeDefined()
+})
+
+test('clicking the button shows url, likes and user', async () => {
+  const blog = {
+    title: 'Test blog',
+    author: 'Test author',
+    url: 'www.example.com',
+    likes: 1,
+    user: {
+      name: 'TestiJonna'
+    }
+  }
+
+  render(<Blog blog={blog} />)
+
+  const user = userEvent.setup()
+  const button = screen.getByText('View')
+  await user.click(button)
+
+  expect(screen.getByText('www.example.com')).toBeDefined()
+  expect(screen.getByText('likes 1')).toBeDefined()
+  expect(screen.getByText('TestiJonna')).toBeDefined()
 })
