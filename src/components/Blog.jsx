@@ -20,7 +20,7 @@ const Blog = ({ blog, handleLike, handleDelete, user }) => {
 
       {!showDetails && (
         <div>
-          {blog.title} {blog.author}
+          <span>{blog.title}</span>
           <button onClick={toggleDetails}>View</button>
         </div>
       )}
