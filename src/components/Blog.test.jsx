@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
 import { vi } from 'vitest'
+import BlogForm from './BlogForm'
 
 test('renders content', () => {
   const blog = {
@@ -68,4 +69,26 @@ test('clicking button "Like" twice calls event handler twice', async () => {
   await user.click(likeButton)
 
   expect(mockHandler.mock.calls).toHaveLength(2)
+})
+
+test('createBlog is called with correct data', async () => {
+  const createBlog = vi.fn()
+
+  render(<BlogForm createBlog={createBlog} />)
+
+  const user = userEvent.setup()
+
+  await user.type(screen.getByPlaceholderText('title'), 'New blog')
+  await user.type(screen.getByPlaceholderText('author'), 'Testi Author')
+  await user.type(screen.getByPlaceholderText('url'), 'www.example.com')
+
+  await user.click(screen.getByText('Save'))
+
+  expect(createBlog).toHaveBeenCalledTimes(1)
+
+  expect(createBlog).toHaveBeenCalledWith({
+    title: 'New blog',
+    author: 'Testi Author',
+    url: 'www.example.com'
+  })
 })
