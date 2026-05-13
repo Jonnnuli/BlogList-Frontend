@@ -87,7 +87,7 @@ const App = () => {
     setBlogs(blogs =>
       blogs
         .map(b => b.id === blog.id ? blogUser : b)
-        .sort((a, b) => a.likes - b.likes)
+        .sort((a, b) => b.likes - a.likes)
     )
   }
 

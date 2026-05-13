@@ -16,7 +16,7 @@ const Blog = ({ blog, handleLike, handleDelete, user }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div className="blogtest" style={blogStyle}>
 
       {!showDetails && (
         <div>
