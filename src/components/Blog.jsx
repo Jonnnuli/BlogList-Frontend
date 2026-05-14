@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const Blog = ({ blog, handleLike, handleDelete, user }) => {
   const [showDetails, setShowDetails] = useState(false)
@@ -20,7 +21,7 @@ const Blog = ({ blog, handleLike, handleDelete, user }) => {
 
       {!showDetails && (
         <div>
-          <span>{blog.title}</span>
+          <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
           <button onClick={toggleDetails}>View</button>
         </div>
       )}
@@ -34,7 +35,11 @@ const Blog = ({ blog, handleLike, handleDelete, user }) => {
           <div>{blog.url}</div>
           <div>
                 likes {blog.likes}
-            <button onClick={() => handleLike(blog)}>Like</button>
+            {user && (
+              <button onClick={() => handleLike(blog)}>
+                  Like
+              </button>
+            )}
           </div>
           <div>{blog.user?.name}</div>
           {user && blog.user && (

@@ -6,6 +6,10 @@ import Notification from './components/Notification.jsx'
 import LoginForm from './components/LoginForm.jsx'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
+import BlogView from './components/BlogView'
+import {
+  Routes, Route, Link, useNavigate
+} from 'react-router-dom'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -15,6 +19,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [infoMessage, setInfoMessage] = useState(null)
   const blogFormRef = useRef()
+  const navigate = useNavigate()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -44,6 +49,7 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      navigate('/')
     } catch {
       setErrorMessage('wrong credentials')
       setTimeout(() => {
@@ -55,6 +61,7 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
+    navigate('/')
   }
 
   const addBlog = async (blogObject) => {
@@ -72,6 +79,8 @@ const App = () => {
   }
 
   const handleLike = async (blog) => {
+    if (!user) return
+
     const updatedBlog = {
       user: blog.user.id || blog.user,
       likes: blog.likes + 1,
@@ -122,26 +131,45 @@ const App = () => {
     </Togglable>
   )
 
+  const padding = {
+    padding: 5
+  }
+
   return (
     <div>
+      <div>
+        <Link style={padding} to="/">Blogs</Link>
+        {!user && (
+          <Link style={padding} to="/login">Login</Link>
+        )}
+        {user && (
+          <span>
+            {user.name} Logged in
+            <button onClick={handleLogout}>Logout</button>
+          </span>
+        )}
+      </div>
+
       <h2>Blogs</h2>
       <Notification message={errorMessage} type="error"/>
       <Notification message={infoMessage} type="success"/>
-      {!user && loginForm()}
-      {user && (
-        <div>
-          <p>{user.name} Logged in
-            <button onClick={handleLogout}>Logout</button>
-          </p>
-          <Togglable buttonLabel="New blog" ref={blogFormRef}>
-            <BlogForm createBlog={addBlog}/>
-          </Togglable>
-        </div>
-      )}
 
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} handleLike={handleLike} handleDelete={handleDelete} user={user} />
-      )}
+      <Routes>
+        <Route path="/" element={
+          <div>
+            {blogs.map(blog =>
+              <Blog key={blog.id} blog={blog} handleLike={handleLike} handleDelete={handleDelete} user={user}/>
+            )}
+          </div>
+        }/>
+        <Route path="blogs/:id" element={
+          <BlogView blogs={blogs} handleLike={handleLike} handleDelete={handleDelete} />
+        }/>
+
+        <Route path="/login" element={
+          user ? <div>{user.name} Logged in</div> : loginForm()
+        }/>
+      </Routes>
     </div>
   )
 }
