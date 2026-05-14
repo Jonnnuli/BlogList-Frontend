@@ -139,6 +139,9 @@ const App = () => {
     <div>
       <div>
         <Link style={padding} to="/">Blogs</Link>
+        {user && (
+          <Link style={padding} to="/create">New Blog</Link>
+        )}
         {!user && (
           <Link style={padding} to="/login">Login</Link>
         )}
@@ -161,6 +164,11 @@ const App = () => {
               <Blog key={blog.id} blog={blog}/>
             )}
           </div>
+        }/>
+        <Route path="/create" element={
+          <Togglable buttonLabel="New blog" ref={blogFormRef}>
+            <BlogForm createBlog={addBlog}/>
+          </Togglable>
         }/>
         <Route path="blogs/:id" element={
           <BlogView blogs={blogs} handleLike={handleLike} handleDelete={handleDelete} user={user} />
