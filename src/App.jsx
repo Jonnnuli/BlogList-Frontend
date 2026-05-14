@@ -158,12 +158,12 @@ const App = () => {
         <Route path="/" element={
           <div>
             {blogs.map(blog =>
-              <Blog key={blog.id} blog={blog} handleLike={handleLike} handleDelete={handleDelete} user={user}/>
+              <Blog key={blog.id} blog={blog}/>
             )}
           </div>
         }/>
         <Route path="blogs/:id" element={
-          <BlogView blogs={blogs} handleLike={handleLike} handleDelete={handleDelete} />
+          <BlogView blogs={blogs} handleLike={handleLike} handleDelete={handleDelete} user={user} />
         }/>
 
         <Route path="/login" element={
