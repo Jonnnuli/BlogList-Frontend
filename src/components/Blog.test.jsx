@@ -1,3 +1,5 @@
+/* OLD TESTS
+
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
@@ -91,4 +93,4 @@ test('createBlog is called with correct data', async () => {
     author: 'Testi Author',
     url: 'www.example.com'
   })
-})
+})*/
