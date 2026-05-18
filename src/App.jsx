@@ -10,6 +10,7 @@ import BlogView from './components/BlogView'
 import {
   Routes, Route, Link, useNavigate
 } from 'react-router-dom'
+import { Container, AppBar, Toolbar, Button } from '@mui/material'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -20,6 +21,7 @@ const App = () => {
   const [infoMessage, setInfoMessage] = useState(null)
   const blogFormRef = useRef()
   const navigate = useNavigate()
+  const style = { '&:hover': { bgcolor: 'rgba(255,255,255,0.3)' } }
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -131,54 +133,54 @@ const App = () => {
     </Togglable>
   )
 
-  const padding = {
-    padding: 5
-  }
-
   return (
-    <div>
+    <Container>
       <div>
-        <Link style={padding} to="/">Blogs</Link>
-        {user && (
-          <Link style={padding} to="/create">New Blog</Link>
-        )}
-        {!user && (
-          <Link style={padding} to="/login">Login</Link>
-        )}
-        {user && (
-          <span>
-            {user.name} Logged in
-            <button onClick={handleLogout}>Logout</button>
-          </span>
-        )}
-      </div>
-
-      <h2>Blogs</h2>
-      <Notification message={errorMessage} type="error"/>
-      <Notification message={infoMessage} type="success"/>
-
-      <Routes>
-        <Route path="/" element={
-          <div>
-            {blogs.map(blog =>
-              <Blog key={blog.id} blog={blog}/>
+        <AppBar position="static">
+          <Toolbar>
+            <Button color="inherit" component={Link} to="/" sx={style}>Blogs</Button>
+            {user && (
+              <Button color="inherit" component={Link} to="/create" sx={style}>New Blog</Button>
             )}
-          </div>
-        }/>
-        <Route path="/create" element={
-          <Togglable buttonLabel="New blog" ref={blogFormRef}>
-            <BlogForm createBlog={addBlog}/>
-          </Togglable>
-        }/>
-        <Route path="blogs/:id" element={
-          <BlogView blogs={blogs} handleLike={handleLike} handleDelete={handleDelete} user={user} />
-        }/>
+            {!user && (
+              <Button color="inherit" component={Link} to="/login" sx={style}>Login</Button>
+            )}
+            {user && (
+              <span style={{ marginLeft: '1rem', marginRight: '1rem' }}>
+                {user.name} Logged in
+                <button onClick={handleLogout}>Logout</button>
+              </span>
+            )}
+          </Toolbar>
+        </AppBar>
 
-        <Route path="/login" element={
-          user ? <div>{user.name} Logged in</div> : loginForm()
-        }/>
-      </Routes>
-    </div>
+        <h2>Blogs</h2>
+        <Notification message={errorMessage} type="error"/>
+        <Notification message={infoMessage} type="success"/>
+
+        <Routes>
+          <Route path="/" element={
+            <div>
+              {blogs.map(blog =>
+                <Blog key={blog.id} blog={blog}/>
+              )}
+            </div>
+          }/>
+          <Route path="/create" element={
+            <Togglable buttonLabel="New blog" ref={blogFormRef}>
+              <BlogForm createBlog={addBlog}/>
+            </Togglable>
+          }/>
+          <Route path="blogs/:id" element={
+            <BlogView blogs={blogs} handleLike={handleLike} handleDelete={handleDelete} user={user} />
+          }/>
+
+          <Route path="/login" element={
+            user ? <div>{user.name} Logged in</div> : loginForm()
+          }/>
+        </Routes>
+      </div>
+    </Container>
   )
 }
 
