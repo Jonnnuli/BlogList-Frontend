@@ -146,9 +146,9 @@ const App = () => {
               <Button color="inherit" component={Link} to="/login" sx={style}>Login</Button>
             )}
             {user && (
-              <span style={{ marginLeft: '1rem', marginRight: '1rem' }}>
+              <span style={{ marginLeft: 'auto' }}>
                 {user.name} Logged in
-                <button onClick={handleLogout}>Logout</button>
+                <Button color="inherit" onClick={handleLogout} sx={style}>Logout</Button>
               </span>
             )}
           </Toolbar>
